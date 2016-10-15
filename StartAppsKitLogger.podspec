@@ -18,7 +18,7 @@ s.homepage         = 'https://github.com/StartAppsPe/'+s.name
 s.license          = 'MIT'
 s.author           = { 'Gabriel Lanata' => 'gabriellanata@gmail.com' }
 
-s.source           = { :git => 'https://github.com/StartAppsPe/"+s.name+".git', :tag => s.version.to_s }
+s.source           = { :git => 'https://github.com/StartAppsPe/'+s.name+'.git', :tag => s.version.to_s }
 s.module_name      = s.name
 s.platform         = :ios, '8.0'
 s.requires_arc     = true
