@@ -9,17 +9,17 @@
 Pod::Spec.new do |s|
 
 s.name             = 'StartAppsKitLogger'
-s.version          = '0.9.1'
+s.version          = '0.9.2'
 s.summary          = 'A library that does everything.'
 s.description      = <<-DESC
 A library that does everything. Central class is LoadAction and it helps you work with asynchronous loading of data from any Source.
 DESC
-s.homepage         = 'https://github.com/StartAppsPe/StartAppsKit'
+s.homepage         = 'https://github.com/StartAppsPe/'+s.name
 s.license          = 'MIT'
 s.author           = { 'Gabriel Lanata' => 'gabriellanata@gmail.com' }
 
-s.source           = { :git => 'https://github.com/StartAppsPe/StartAppsKit.git', :tag => s.version.to_s }
-s.module_name      = 'StartAppsKit'
+s.source           = { :git => 'https://github.com/StartAppsPe/"+s.name+".git', :tag => s.version.to_s }
+s.module_name      = s.name
 s.platform         = :ios, '8.0'
 s.requires_arc     = true
 
