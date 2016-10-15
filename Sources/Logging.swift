@@ -34,12 +34,12 @@ public func print(owner: String, items: Any..., separator: String = ", ", termin
     let indentationCount = max(PrintLevel.indentation1-printString.characters.count, 0)
     let indentation = String(repeating: " ", count: indentationCount)
     var itemsString = String(describing: items[0])
-    for i in 1..<items.count { itemsString.append("\(separator)\(String(describing: items[i]))") }
-    printString.append("\(indentation)\(itemsString)")
+    for i in 1..<items.count { itemsString += "\(separator)\(String(describing: items[i]))" }
+    printString += "\(indentation)\(itemsString)"
     if level.rawValue <= PrintLevel.warning.rawValue {
         let indentation2Count = max(PrintLevel.indentation2-printString.characters.count, 0)
         let indentation2 = String(repeating: " ", count: indentation2Count)
-        printString.append("\(indentation2)\(level)")
+        printString += "\(indentation2)\(level)"
     }
     print(printString, terminator: terminator)
 }
