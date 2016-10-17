@@ -1,45 +1,88 @@
 //
-//  Logging.swift
-//  Pods
+//  StartAppsKitnewLogger.swift
+//  Jeeves
 //
-//  Created by Gabriel Lanata on 9/17/15.
-//  Copyright © 2015 StartApps. All rights reserved.
+//  Created by Gabriel Lanata on 16/10/16.
+//
 //
 
-import Foundation
-
-public var _PrintLevelCurrent = PrintLevel.debug
-public var _PrintIndentation1 = 25
-public var _PrintIndentation2 = 100
-
-public enum PrintLevel: Int {
-    case none = 0, fatal, error, warning, info, debug, verbose
-    public static var current: PrintLevel {
-        set { _PrintLevelCurrent = newValue }
-        get { return _PrintLevelCurrent }
+public class Log {
+    
+    public enum Level: Int, CustomStringConvertible {
+        case none = 0, fatal, error, warning, info, debug, verbose
+        public var description: String {
+            switch self {
+            case .none:    return "NONE"
+            case .fatal:   return "FATAL"
+            case .error:   return "ERROR"
+            case .warning: return "WARNING"
+            case .info:    return "INFO"
+            case .debug:   return "DEBUG"
+            case .verbose: return "VERBOSE"
+            }
+        }
     }
-    public static var indentation1: Int {
-        set { _PrintIndentation1 = newValue }
-        get { return _PrintIndentation1 }
+    
+    public static var level: Level = .debug
+    
+    public static var indentation1:  Int = 25
+    public static var indentation2:  Int = 100
+    public static var separator:  String = ", "
+    public static var terminator: String = "\n"
+    
+    public static func log(_ level: Level, _ items: Any..., fileName: String = #file,
+                           functionName: String = #function, lineNum: Int = #line) {
+        guard level.rawValue <= self.level.rawValue else { return }
+        var printString = "\(fileName): "
+        let indentation1Count = max(indentation1-printString.characters.count, 0)
+        let indentation1String = String(repeating: " ", count: indentation1Count)
+        var itemsString = String(describing: items[0])
+        for i in 1..<items.count { itemsString += "\(separator)\(String(describing: items[i]))" }
+        printString += "\(indentation1String)\(itemsString)"
+        if level.rawValue <= Level.warning.rawValue {
+            let indentation2Count = max(indentation2-printString.characters.count, 0)
+            let indentation2String = String(repeating: " ", count: indentation2Count)
+            printString += "\(indentation2String)\(level)"
+        }
+        print(printString, terminator: terminator)
     }
-    public static var indentation2: Int {
-        set { _PrintIndentation2 = newValue }
-        get { return _PrintIndentation2 }
+    
+    
+    public class func fatal(_ items: Any..., fileName: String = #file,
+                            functionName: String = #function, lineNum: Int = #line) {
+        log(.fatal, items, fileName: fileName, functionName: functionName, lineNum: lineNum)
     }
+    
+    public class func error(_ items: Any..., fileName: String = #file,
+                            functionName: String = #function, lineNum: Int = #line) {
+        log(.error, items, fileName: fileName, functionName: functionName, lineNum: lineNum)
+    }
+    
+    public class func warning(_ items: Any..., fileName: String = #file,
+                              functionName: String = #function, lineNum: Int = #line) {
+        log(.warning, items, fileName: fileName, functionName: functionName, lineNum: lineNum)
+    }
+    
+    public class func info(_ items: Any..., fileName: String = #file,
+                           functionName: String = #function, lineNum: Int = #line) {
+        log(.info, items, fileName: fileName, functionName: functionName, lineNum: lineNum)
+    }
+    
+    public class func debug(_ items: Any..., fileName: String = #file,
+                            functionName: String = #function, lineNum: Int = #line) {
+        log(.debug, items, fileName: fileName, functionName: functionName, lineNum: lineNum)
+    }
+    
+    public static func verbose(_ items: Any..., fileName: String = #file,
+                               functionName: String = #function, lineNum: Int = #line) {
+        log(.verbose, items, fileName: fileName, functionName: functionName, lineNum: lineNum)
+    }
+    
 }
 
-public func print(owner: String, items: Any..., separator: String = ", ", terminator: String = "\n", level: PrintLevel) {
-    guard level.rawValue <= PrintLevel.current.rawValue else { return }
-    var printString = "\(owner): "
-    let indentationCount = max(PrintLevel.indentation1-printString.characters.count, 0)
-    let indentation = String(repeating: " ", count: indentationCount)
-    var itemsString = String(describing: items[0])
-    for i in 1..<items.count { itemsString += "\(separator)\(String(describing: items[i]))" }
-    printString += "\(indentation)\(itemsString)"
-    if level.rawValue <= PrintLevel.warning.rawValue {
-        let indentation2Count = max(PrintLevel.indentation2-printString.characters.count, 0)
-        let indentation2 = String(repeating: " ", count: indentation2Count)
-        printString += "\(indentation2)\(level)"
-    }
-    print(printString, terminator: terminator)
+
+// Legacy support
+public func print(owner: String, items: Any..., level: Log.Level,
+                  fileName: String = #file, functionName: String = #function, lineNum: Int = #line) {
+    Log.log(level, items, fileName: fileName, functionName: functionName, lineNum: lineNum)
 }
