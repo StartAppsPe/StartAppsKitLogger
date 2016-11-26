@@ -6,6 +6,8 @@
 //
 //
 
+import Foundation
+
 public class Log {
     
     public enum Level: Int, CustomStringConvertible {
