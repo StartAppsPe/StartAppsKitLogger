@@ -25,57 +25,68 @@ public class Log {
     
     public static var level: Level = .debug
     
-    public static var indentation1:  Int = 25
-    public static var indentation2:  Int = 100
+    public static var indentation1:  Int = 40
+    public static var indentation2:  Int = 140
     public static var separator:  String = ", "
     public static var terminator: String = "\n"
     
-    public static func log(_ level: Level, _ items: Any..., fileName: String = #file,
+    fileprivate static func log(_ level: Level, itemArray: [Any], fileName: String = #file,
                            functionName: String = #function, lineNum: Int = #line) {
         guard level.rawValue <= self.level.rawValue else { return }
-        var printString = "\(fileName): "
-        let indentation1Count = max(indentation1-printString.characters.count, 0)
-        let indentation1String = String(repeating: " ", count: indentation1Count)
-        var itemsString = String(describing: items[0])
-        for i in 1..<items.count { itemsString += "\(separator)\(String(describing: items[i]))" }
-        printString += "\(indentation1String)\(itemsString)"
+        var printString = "\(fileName.components(separatedBy: "/").last!)~\(lineNum): "
+        printString = printString.addPaddingAfter(indentation1)
+        printString += itemArray.map({ String(describing: $0) }).joined(separator: separator)
         if level.rawValue <= Level.warning.rawValue {
-            let indentation2Count = max(indentation2-printString.characters.count, 0)
-            let indentation2String = String(repeating: " ", count: indentation2Count)
-            printString += "\(indentation2String)\(level)"
+            printString = printString.addPaddingAfter(indentation2)
+            printString += "\(level)"
         }
         print(printString, terminator: terminator)
+    }
+    
+    public static func log(_ level: Level, _ items: Any..., fileName: String = #file,
+                           functionName: String = #function, lineNum: Int = #line) {
+        log(level, itemArray: items, fileName: fileName, functionName: functionName, lineNum: lineNum)
     }
     
     
     public class func fatal(_ items: Any..., fileName: String = #file,
                             functionName: String = #function, lineNum: Int = #line) {
-        log(.fatal, items, fileName: fileName, functionName: functionName, lineNum: lineNum)
+        log(.fatal, itemArray: items, fileName: fileName, functionName: functionName, lineNum: lineNum)
     }
     
     public class func error(_ items: Any..., fileName: String = #file,
                             functionName: String = #function, lineNum: Int = #line) {
-        log(.error, items, fileName: fileName, functionName: functionName, lineNum: lineNum)
+        log(.error, itemArray: items, fileName: fileName, functionName: functionName, lineNum: lineNum)
     }
     
     public class func warning(_ items: Any..., fileName: String = #file,
                               functionName: String = #function, lineNum: Int = #line) {
-        log(.warning, items, fileName: fileName, functionName: functionName, lineNum: lineNum)
+        log(.warning, itemArray: items, fileName: fileName, functionName: functionName, lineNum: lineNum)
     }
     
     public class func info(_ items: Any..., fileName: String = #file,
                            functionName: String = #function, lineNum: Int = #line) {
-        log(.info, items, fileName: fileName, functionName: functionName, lineNum: lineNum)
+        log(.info, itemArray: items, fileName: fileName, functionName: functionName, lineNum: lineNum)
     }
     
     public class func debug(_ items: Any..., fileName: String = #file,
                             functionName: String = #function, lineNum: Int = #line) {
-        log(.debug, items, fileName: fileName, functionName: functionName, lineNum: lineNum)
+        log(.debug, itemArray: items, fileName: fileName, functionName: functionName, lineNum: lineNum)
     }
     
     public static func verbose(_ items: Any..., fileName: String = #file,
                                functionName: String = #function, lineNum: Int = #line) {
-        log(.verbose, items, fileName: fileName, functionName: functionName, lineNum: lineNum)
+        log(.verbose, itemArray: items, fileName: fileName, functionName: functionName, lineNum: lineNum)
+    }
+    
+}
+
+fileprivate extension String {
+    
+    public func addPaddingAfter(_ length: Int) -> String {
+        let paddingCount = max(length-self.characters.count, 0)
+        let paddingString = String(repeating: " ", count: paddingCount)
+        return self+paddingString
     }
     
 }
@@ -84,5 +95,5 @@ public class Log {
 // Legacy support
 public func print(owner: String, items: Any..., level: Log.Level,
                   fileName: String = #file, functionName: String = #function, lineNum: Int = #line) {
-    Log.log(level, items, fileName: fileName, functionName: functionName, lineNum: lineNum)
+    Log.log(level, itemArray: items, fileName: fileName, functionName: functionName, lineNum: lineNum)
 }
