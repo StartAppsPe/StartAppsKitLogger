@@ -83,7 +83,7 @@ public class Log {
     
 }
 
-fileprivate extension String {
+public extension String {
     
     public func addPaddingAfter(_ length: Int) -> String {
         let paddingCount = max(length-self.characters.count, 0)
