@@ -23,25 +23,35 @@ public class Log {
             case .verbose: return "VERBOSE"
             }
         }
+        public var emoji: String {
+            switch self {
+            case .none:    return "💚"
+            case .fatal:   return "🔥"
+            case .error:   return "‼️"
+            case .warning: return "⚠️"
+            case .info:    return "💬"
+            case .debug:   return "⚙️"
+            case .verbose: return "🔬"
+            }
+        }
     }
     
     public static var level: Level = .debug
     
-    public static var indentation1:  Int = 40
-    public static var indentation2:  Int = 140
+    public static var indentation0:  Int = 3
+    public static var indentation1:  Int = 50
+    public static var indentation2:  Int = 150
     public static var separator:  String = ", "
     public static var terminator: String = "\n"
     
     fileprivate static func log(_ level: Level, itemArray: [Any], fileName: String = #file,
                            functionName: String = #function, lineNum: Int = #line) {
         guard level.rawValue <= self.level.rawValue else { return }
-        var printString = "\(fileName.components(separatedBy: "/").last!)~\(lineNum): "
+        var printString = "\(level.emoji)"
+        printString = printString.addPaddingAfter(indentation0)
+        printString += "\(fileName.components(separatedBy: "/").last!)~\(lineNum):"
         printString = printString.addPaddingAfter(indentation1)
         printString += itemArray.map({ String(describing: $0) }).joined(separator: separator)
-        if level.rawValue <= Level.warning.rawValue {
-            printString = printString.addPaddingAfter(indentation2)
-            printString += "\(level)"
-        }
         print(printString, terminator: terminator)
     }
     
@@ -83,9 +93,9 @@ public class Log {
     
 }
 
-public extension String {
+fileprivate extension String {
     
-    public func addPaddingAfter(_ length: Int) -> String {
+    fileprivate func addPaddingAfter(_ length: Int) -> String {
         let paddingCount = max(length-self.characters.count, 0)
         let paddingString = String(repeating: " ", count: paddingCount)
         return self+paddingString
