@@ -11,13 +11,13 @@ import Foundation
 public class Log {
     
     public enum Level: Int, CustomStringConvertible {
-        case none = 0, fatal, error, warning, info, debug, verbose
+        case all = 0, fatal, error, warn, info, debug, verbose
         public var description: String {
             switch self {
-            case .none:    return "NONE"
+            case .all:     return "ALL"
             case .fatal:   return "FATAL"
             case .error:   return "ERROR"
-            case .warning: return "WARNING"
+            case .warn:    return "WARN"
             case .info:    return "INFO"
             case .debug:   return "DEBUG"
             case .verbose: return "VERBOSE"
@@ -25,10 +25,10 @@ public class Log {
         }
         public var emoji: String {
             switch self {
-            case .none:    return "💚"
+            case .all:     return "💎"
             case .fatal:   return "🔥"
             case .error:   return "‼️"
-            case .warning: return "⚠️"
+            case .warn:    return "⚠️"
             case .info:    return "💬"
             case .debug:   return "⚙️"
             case .verbose: return "🔬"
@@ -61,6 +61,11 @@ public class Log {
     }
     
     
+    public class func all(_ items: Any..., fileName: String = #file,
+                            functionName: String = #function, lineNum: Int = #line) {
+        log(.all, itemArray: items, fileName: fileName, functionName: functionName, lineNum: lineNum)
+    }
+    
     public class func fatal(_ items: Any..., fileName: String = #file,
                             functionName: String = #function, lineNum: Int = #line) {
         log(.fatal, itemArray: items, fileName: fileName, functionName: functionName, lineNum: lineNum)
@@ -71,9 +76,9 @@ public class Log {
         log(.error, itemArray: items, fileName: fileName, functionName: functionName, lineNum: lineNum)
     }
     
-    public class func warning(_ items: Any..., fileName: String = #file,
+    public class func warn(_ items: Any..., fileName: String = #file,
                               functionName: String = #function, lineNum: Int = #line) {
-        log(.warning, itemArray: items, fileName: fileName, functionName: functionName, lineNum: lineNum)
+        log(.warn, itemArray: items, fileName: fileName, functionName: functionName, lineNum: lineNum)
     }
     
     public class func info(_ items: Any..., fileName: String = #file,
