@@ -106,6 +106,12 @@ fileprivate extension String {
         return self+paddingString
     }
     
+    fileprivate func addPaddingBefore(_ length: Int) -> String {
+        let paddingCount = max(length-self.characters.count, 0)
+        let paddingString = String(repeating: " ", count: paddingCount)
+        return paddingString+self
+    }
+    
 }
 
 
