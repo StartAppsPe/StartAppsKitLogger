@@ -98,16 +98,16 @@ public class Log {
     
 }
 
-fileprivate extension String {
+extension String {
     
     fileprivate func addPaddingAfter(_ length: Int) -> String {
-        let paddingCount = max(length-self.characters.count, 0)
+        let paddingCount = max(length-self.count, 0)
         let paddingString = String(repeating: " ", count: paddingCount)
         return self+paddingString
     }
     
     fileprivate func addPaddingBefore(_ length: Int) -> String {
-        let paddingCount = max(length-self.characters.count, 0)
+        let paddingCount = max(length-self.count, 0)
         let paddingString = String(repeating: " ", count: paddingCount)
         return paddingString+self
     }
